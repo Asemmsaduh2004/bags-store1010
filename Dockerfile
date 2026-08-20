@@ -1,6 +1,5 @@
 FROM php:8.4-apache
 
-# تثبيت الحزم المطلوبة والدعم لـ SQLite
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
@@ -12,7 +11,6 @@ RUN apt-get update && apt-get install -y \
     git \
     curl
 
-# تثبيت امتدادات PHP بما فيها pdo_sqlite
 RUN docker-php-ext-install pdo_mysql pdo_sqlite mbstring exif pcntl bcmath gd
 
 RUN a2enmod rewrite
@@ -28,8 +26,10 @@ COPY . .
 
 RUN composer install --no-dev --optimize-autoloader
 
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# إنشاء ملف قاعدة البيانات وإعطاء الصلاحيات الكاملة
+RUN touch /var/www/html/database/database.sqlite
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
 
 EXPOSE 80
 
-CMD ["sh", "-c", "touch /tmp/database.sqlite && php artisan migrate:fresh --force --seed && apache2-foreground"]
+CMD ["sh", "-c", "php artisan migrate:fresh --force --seed && apache2-foreground"]
