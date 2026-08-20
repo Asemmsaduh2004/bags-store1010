@@ -30,4 +30,9 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 
 EXPOSE 80
 
-CMD touch /tmp/database.sqlite && touch /var/www/html/database/database.sqlite && chmod 777 /tmp/database.sqlite && chmod 777 /var/www/html/database/database.sqlite && php artisan config:clear && php artisan migrate:fresh --force --seed && apache2-foreground
+CMD touch /var/www/html/database/database.sqlite && \
+    chmod -R 777 /var/www/html/database && \
+    chown -R www-data:www-data /var/www/html/database && \
+    php artisan config:clear && \
+    php artisan migrate:fresh --force --seed && \
+    apache2-foreground
