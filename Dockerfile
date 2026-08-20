@@ -26,10 +26,8 @@ COPY . .
 
 RUN composer install --no-dev --optimize-autoloader
 
-# إنشاء ملف قاعدة البيانات وإعطاء الصلاحيات الكاملة
-RUN touch /var/www/html/database/database.sqlite
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 EXPOSE 80
 
-CMD ["sh", "-c", "php artisan migrate:fresh --force --seed && apache2-foreground"]
+CMD ["sh", "-c", "touch /tmp/database.sqlite && chmod 777 /tmp/database.sqlite && php artisan migrate:fresh --force --seed && apache2-foreground"]
