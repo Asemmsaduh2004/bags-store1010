@@ -33,6 +33,9 @@ EXPOSE 80
 CMD touch /var/www/html/database/database.sqlite && \
     chmod -R 777 /var/www/html/database && \
     chown -R www-data:www-data /var/www/html/database && \
+    php artisan storage:link --force && \
+    chmod -R 777 /var/www/html/storage /var/www/html/public/storage && \
+    chown -R www-data:www-data /var/www/html/storage /var/www/html/public/storage && \
     php artisan config:clear && \
     php artisan migrate:fresh --force --seed && \
     apache2-foreground
