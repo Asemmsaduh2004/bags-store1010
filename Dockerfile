@@ -29,5 +29,4 @@ RUN composer install --no-dev --optimize-autoloader
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 EXPOSE 80
-
-CMD ["sh", "-c", "touch /tmp/database.sqlite && chmod 777 /tmp/database.sqlite && php artisan migrate:fresh --force --seed && apache2-foreground"]
+CMD touch /tmp/database.sqlite && chmod 777 /tmp/database.sqlite && php artisan config:clear && php artisan migrate:fresh --force --seed && apache2-foreground
